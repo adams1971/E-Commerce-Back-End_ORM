@@ -1,56 +1,63 @@
-const router = require('express').Router();
-const { Product, Category, Tag, ProductTag } = require('../../models');
+const router = require("express").Router();
+const { Product, Category, Tag, ProductTag } = require("../../models");
 
 // The `/api/products` endpoint
 
 // get all products
-router.get('/', async (req, res) => {
+router.get("/", (req, res) => {
   // find all products
-  try {
-// include its associated Category and Tag data
-    const productData = await Produce.findAll({
-      include: [{ model: Category },
+  Product.findAll({
+    attributes: ["id", "product_name", "price", "stock", "category_id"],
+    include: [
+      { model: Category, attributes: ["id", "category_name"] },
       {
         model: Tag,
-        through: ProductTag,
-        as: 'tags'
+        attributes: ["id", "tag_name"],
       },
-    ]
+    ],
+  })
+    .then((dbProductData) => res.json(dbProductData))
+    .catch((err) => {
+      console.error(err);
+      res.status(500).json(err);
     });
-    res.status(200).json(productData)
-  } catch (err) {
-    res.status(500).json(err)
-  }
 });
 
 // get one product
-router.get('/:id', async (req, res) => {
+router.get("/:id", (req, res) => {
   // find a single product by its `id`
-  try {
-    // include its associated Category and Tag data
-    const productData = await Product.findByPk(req.params.id, {
-      include: [{ model: Category },
+  Product.findOne({
+    where: {
+      id: req.params.id,
+    },
+    attributes: ["id", "product_name", "price", "stock", "category_id"],
+    include: [
+      {
+        model: Category,
+        attributes: ["id", "category_name"],
+      },
       {
         model: Tag,
-        through: ProductTag,
-        as: 'tags'
+        attributes: ["id", "tag_name"],
       },
-      ]
+    ],
+  })
+    .then((dbProductData) => {
+      if (!dbProductData) {
+        res
+          .status(404)
+          .json({ message: "Please try again, Invalid product ID." });
+        return;
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(500).json(err);
     });
-
-    if (!productData) {
-      res.status(404).json({ message: 'Please try again, Invalid product ID.'});
-      return;
-    }
-
-    res.status(200).json(productData);
-  } catch (err) {
-    res.status(500).json(err);
-  }
 });
 
 // create new product
-router.post('/', (req, res) => {
+router.post("/", (req, res) => {
   /* req.body should look like this...
     {
       product_name: "Basketball",
@@ -82,7 +89,7 @@ router.post('/', (req, res) => {
 });
 
 // update product
-router.put('/:id', (req, res) => {
+router.put("/:id", (req, res) => {
   // update product data
   Product.update(req.body, {
     where: {
@@ -123,24 +130,25 @@ router.put('/:id', (req, res) => {
     });
 });
 
-router.delete('/:id', async (req, res) => {
+router.delete("/:id", (req, res) => {
   // delete one product by its `id` value
-  try {
-    const results = await product.destory({
-      where: {
-        id: req.params.id
+  Product.destory({
+    where: {
+      id: req.params.id,
+    },
+  })
+    .then((dbProductData) => {
+      if (!dbProductData) {
+        res
+          .status(404)
+          .json({ message: "Please try again, Invalid product ID." });
+        return;
       }
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(500).json(err);
     });
-
-    if (!results) {
-      res.status(404).json({ message: 'Please try again, Invalid product ID.'});
-      return;
-    }
-
-    res.status(200).json(results);
-  } catch (err) {
-    res.status(500).json(err);
-  }
 });
 
 module.exports = router;

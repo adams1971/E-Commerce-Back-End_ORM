@@ -8,12 +8,12 @@ Product.belongsTo(Category, {
   foreignKey: 'category_id'
 });
 
-Category.hasMany(Products, {
+Category.hasMany(Product, {
   foreignKey: 'category_id',
   onDelete: 'CASCADE',
 });
 
-Products.belongsToMany(Tag, {
+Product.belongsToMany(Tag, {
   through: {
     model: ProductTag,
     unique: false,
