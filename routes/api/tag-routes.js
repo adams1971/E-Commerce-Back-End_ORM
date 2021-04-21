@@ -11,7 +11,8 @@ router.get("/", (req, res) => {
     include: [
       {
         model: Product,
-        attributes: ["id", "poduct_name", "price", "stock", "category_id"],
+        as: 'products',
+        attributes: ["id", "product_name", "price", "stock", "category_id"],
       },
     ],
   })
@@ -33,7 +34,7 @@ router.get("/:id", (req, res) => {
     include: [
       {
         model: Product,
-        attributes: ["id", "poduct_name", "price", "stock", "category_id"],
+        attributes: ["id", "product_name", "price", "stock", "category_id"],
       },
     ],
   })
@@ -93,7 +94,7 @@ router.delete("/:id", (req, res) => {
   })
     .then((dbtagData) => {
       if (!dbtagData[0]) {
-        res.status(404).json({ message: "no tag fpound with this id" });
+        res.status(404).json({ message: "no tag found with this id" });
         return;
       }
       res.json(dbtagData);
