@@ -135,10 +135,10 @@ router.put("/:id", (req, res) => {
 
 router.delete("/:id", (req, res) => {
   // delete one product by its `id` value
-  Product.destory({
+  Product.destroy({
     where: {
       id: req.params.id,
-    },
+    }
   })
     .then((dbProductData) => {
       if (!dbProductData) {
@@ -147,6 +147,7 @@ router.delete("/:id", (req, res) => {
           .json({ message: "Please try again, Invalid product ID." });
         return;
       }
+      res.json(dbProductData);
     })
     .catch((err) => {
       console.log(err);

@@ -34,14 +34,14 @@ router.get("/:id", (req, res) => {
     include: [
       {
         model: Product,
-        // attributes: ["id", "product_name", "price", "stock", "category_id"],
-        // as: "tags"
+        attributes: ["id", "product_name", "price", "stock", "category_id"],
+        as: "products"
       },
-      {
-        model: ProductTag,
-        // attributes: ["id", "tag_name"],
-        // as: "tags"
-      },
+      // {
+      //   model: ProductTag,
+      //   attributes: ["id", "tag_name"],
+      //   as: "tags"
+      // },
 
     ],
   })
