@@ -22,20 +22,27 @@ router.get("/", (req, res) => {
       res.status(500).json(err);
     });
 });
-
-router.get("/:id", (req, res) => {
-  // find a single tag by its `id`
+// find a single tag by its `id`
   // be sure to include its associated Product data
+router.get("/:id", (req, res) => {
+  
   Tag.findOne({
     where: {
       id: req.params.id,
     },
-    attributes: ["id", "tag_name"],
+    // attributes: ["id", "tag_name"],
     include: [
       {
         model: Product,
-        attributes: ["id", "product_name", "price", "stock", "category_id"],
+        // attributes: ["id", "product_name", "price", "stock", "category_id"],
+        // as: "tags"
       },
+      {
+        model: ProductTag,
+        // attributes: ["id", "tag_name"],
+        // as: "tags"
+      },
+
     ],
   })
     .then((dbtagData) => {

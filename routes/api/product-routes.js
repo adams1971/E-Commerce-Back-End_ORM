@@ -51,6 +51,7 @@ router.get("/:id", (req, res) => {
           .json({ message: "Please try again, Invalid product ID." });
         return;
       }
+      res.json(dbProductData)
     })
     .catch((err) => {
       console.log(err);
